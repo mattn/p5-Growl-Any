@@ -88,13 +88,15 @@ Growl::Any -
 
 =head1 DESCRIPTION
 
-Growl::Any is
+Growl::Any is perl module that can provide any growl application.
 
 =head1 AUTHOR
 
 Yasuhiro Matsumoto E<lt>mattn.jp@gmail.comE<gt>
 
 =head1 SEE ALSO
+
+L<Mac::Growl>, L<Desktop::Notify>, L<Net::GrowlClient>, L<Win32::MSAgent>
 
 =head1 LICENSE
 
