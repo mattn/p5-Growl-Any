@@ -6,35 +6,37 @@ our $VERSION = '0.01';
 
 sub new {
     my $class = shift;
-    bless({ instance => undef }, $class);
+    bless({ instance => undef, name => undef }, $class);
 }
 
-sub register {}
 sub notify {}
 
 no warnings 'redefine';
 if (eval { require Mac::Growl; }) {
     *Growl::Any::register = sub {
         my ($self, $appname, $events) = @_;
+        $self->{name} = $appname;
         Mac::Growl::RegisterNotifications($appname, [ @$events, 'Error' ], $events);
     };
     *Growl::Any::notify = sub {
-        my ($self, $appname, $event, $title, $message, $icon) = @_;
-        Mac::Growl::PostNotification($appname, $event, $title, $message, 0, 0, $icon);
+        my ($self, $event, $title, $message, $icon) = @_;
+        Mac::Growl::PostNotification($self->{name}, $event, $title, $message, 0, 0, $icon);
     };
 } elsif (eval { require Desktop::Notify; }) {
     *Growl::Any::register = sub {
         my ($self, $appname, $events) = @_;
+        $self->{name} = $appname;
         $self->{instance} = Desktop::Notify->new(("app_name" => $appname));
     };
     *Growl::Any::notify = sub {
-        my ($self, $appname, $event, $title, $message, $icon) = @_;
+        my ($self, $event, $title, $message, $icon) = @_;
         $self->{instance}->create(body => $message, summary => $title, app_icon => $icon);
     };
 } elsif (eval { require Net::GrowlClient; }) {
     *Growl::Any::register = sub {
         my ($self, $appname, $events) = @_;
         push @$events, 'Error';
+        $self->{name} = $appname;
         $self->{instance} = Net::GrowlClient->init(
             CLIENT_TYPE_REGISTRATION => 0,
             CLIENT_TYPE_NOTIFICATION => 1,
@@ -44,7 +46,7 @@ if (eval { require Mac::Growl; }) {
         );
     };
     *Growl::Any::notify = sub {
-        my ($self, $appname, $event, $title, $message, $icon) = @_;
+        my ($self, $event, $title, $message, $icon) = @_;
         $self->{instance}->notify(
             title => $title,
             message => $message,
@@ -62,7 +64,7 @@ if (eval { require Mac::Growl; }) {
 #        $self->{instance}->Show();
 #    };
 #    *Growl::Any::notify = sub {
-#        my ($self, $appname, $event, $title, $message, $icon) = @_;
+#        my ($self, $event, $title, $message, $icon) = @_;
 #        my $req = $self->{instance}->Speak("[$event]$title"."\n".$message);
 #        my $i = 0;
 #		while (($req->Status == 2) || ($req->Status == 4)) {
@@ -84,7 +86,7 @@ Growl::Any -
   use Growl::Any;
   my $growl = Growl::Any->new;
   $growl->register("my app", ['Test1', 'Test2']);
-  $growl->notify("my app", "Test1", "foo", "bar");
+  $growl->notify("Test1", "foo", "bar");
 
 =head1 DESCRIPTION
 
