@@ -9,6 +9,7 @@ sub new {
     bless({ instance => undef, name => undef }, $class);
 }
 
+sub register {}
 sub notify {}
 
 no warnings 'redefine';
