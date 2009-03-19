@@ -2,6 +2,7 @@ package Growl::Any;
 
 use strict;
 use warnings;
+use Carp ();
 our $VERSION = '0.01';
 
 sub new {
@@ -16,11 +17,14 @@ no warnings 'redefine';
 if (eval { require Mac::Growl; }) {
     *Growl::Any::register = sub {
         my ($self, $appname, $events) = @_;
+        Carp::croak 'this is instance method' unless ref $self;
+        Carp::croak 'events should be arrayref' unless ref $events eq 'ARRAY';
         $self->{name} = $appname;
         Mac::Growl::RegisterNotifications($appname, [ @$events, 'Error' ], $events);
     };
     *Growl::Any::notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
+        Carp::croak 'this is instance method' unless ref $self;
         Mac::Growl::PostNotification($self->{name}, $event, $title, $message, 0, 0, $icon);
     };
 } elsif (eval { require Desktop::Notify; }) {
@@ -72,6 +76,8 @@ if (eval { require Mac::Growl; }) {
 #		    $self->{instance}->Stop($req) if $i >10; sleep(1);  $i++;
 #		}
 #    };
+} else {
+    die "You don't have any Growl like module!";
 }
 
 1;
