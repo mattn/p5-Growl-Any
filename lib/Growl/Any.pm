@@ -31,7 +31,7 @@ if (eval { require Mac::Growl; }) {
         my ($self, $appname, $event, $title, $message, $icon) = @_;
         $self->{instance}->create(body => $message, summary => $title, app_icon => $icon);
     };
-} elsif (eval { require Net::GrowlClient1; }) {
+} elsif (eval { require Net::GrowlClient; }) {
     *Growl::Any::register = sub {
         my ($self, $appname, $events) = @_;
         push @$events, 'Error';
@@ -82,6 +82,9 @@ Growl::Any -
 =head1 SYNOPSIS
 
   use Growl::Any;
+  my $growl = Growl::Any->new;
+  $growl->register("my app", ['Test1', 'Test2']);
+  $growl->notify("my app", "Test1", "foo", "bar");
 
 =head1 DESCRIPTION
 
