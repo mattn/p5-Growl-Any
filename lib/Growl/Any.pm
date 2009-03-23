@@ -3,6 +3,7 @@ package Growl::Any;
 use strict;
 use warnings;
 use Carp ();
+use Encode;
 our $VERSION = '0.01';
 
 sub new {
@@ -53,8 +54,8 @@ if (eval { require Mac::Growl; }) {
     *Growl::Any::notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         $self->{instance}->notify(
-            title => $title,
-            message => $message,
+            title => decode_utf8($title),
+            message => decode_utf8($message),
             notification => $event);
     };
 # TODO: MSAgent does not work correctly.
@@ -72,9 +73,9 @@ if (eval { require Mac::Growl; }) {
 #        my ($self, $event, $title, $message, $icon) = @_;
 #        my $req = $self->{instance}->Speak("[$event]$title"."\n".$message);
 #        my $i = 0;
-#		while (($req->Status == 2) || ($req->Status == 4)) {
-#		    $self->{instance}->Stop($req) if $i >10; sleep(1);  $i++;
-#		}
+#        while (($req->Status == 2) || ($req->Status == 4)) {
+#            $self->{instance}->Stop($req) if $i >10; sleep(1);  $i++;
+#        }
 #    };
 } else {
     die "You don't have any Growl like module!";
@@ -102,6 +103,8 @@ Growl::Any is perl module that can provide any growl application.
 =head1 AUTHOR
 
 Yasuhiro Matsumoto E<lt>mattn.jp@gmail.comE<gt>
+
+tokuhirom
 
 =head1 SEE ALSO
 
