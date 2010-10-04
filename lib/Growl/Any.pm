@@ -58,6 +58,26 @@ if (eval { require Mac::Growl; }) {
             message => decode_utf8($message),
             notification => $event);
     };
+} elsif (eval { require Growl::GNTP; }) {
+    *Growl::Any::register = sub {
+        my ($self, $appname, $events) = @_;
+        push @$events, 'Error';
+        $self->{name} = $appname;
+        $self->{instance} = Growl::GNTP->new(
+            AppName => $appname,
+        );
+        my @e = ();
+        push @e, { Name => $_ } for @$events;
+        $self->{instance}->register(\@e);
+    };
+    *Growl::Any::notify = sub {
+        my ($self, $event, $title, $message, $icon) = @_;
+        $self->{instance}->notify(
+            Title => $title,
+            Message => $message,
+            Event => $event,
+            Icon => $icon);
+    };
 # TODO: MSAgent does not work correctly.
 #} elsif (eval { require Win32::OLE; require Win32::MSAgent; }) {
 #    *Growl::Any::register = sub {
