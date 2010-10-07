@@ -6,6 +6,8 @@ use Carp ();
 use Encode;
 use LWP::UserAgent;
 use File::Temp qw/ :mktemp /;
+use File::Which qw/ which /;
+use String::ShellQuote qw/ shell_quote /;
 our $VERSION = '0.01';
 
 sub new {
@@ -35,6 +37,24 @@ if (eval { require Mac::Growl; }) {
             $icon = $f;
         }
         Mac::Growl::PostNotification($self->{name}, $event, $title, $message, 0, 0, $icon);
+        unlink $icon if -e $icon;
+    };
+} elsif (which('notify-send')) {
+    *Growl::Any::register = sub {
+        my ($self, $appname, $events) = @_;
+        $self->{ua} = LWP::UserAgent->new;
+        $self->{ua}->env_proxy;
+    };
+    *Growl::Any::notify = sub {
+        my ($self, $event, $title, $message, $icon) = @_;
+        if ($icon) {
+            my $f = mktemp( "/tmp/XXXXX" );
+            $self->{ua}->mirror( $icon, $f );
+            $icon = $f;
+        }
+        my $command = shell_quote ('notify-send', '--icon', $icon, $title, $message);
+		#system("$command 2> /dev/null");
+        system("$command ");
         unlink $icon if -e $icon;
     };
 } elsif (eval { require Desktop::Notify; }) {
