@@ -4,6 +4,8 @@ use strict;
 use warnings;
 use Carp ();
 use Encode;
+use LWP::UserAgent;
+use File::Temp qw/ :mktemp /;
 our $VERSION = '0.01';
 
 sub new {
@@ -20,23 +22,39 @@ if (eval { require Mac::Growl; }) {
         my ($self, $appname, $events) = @_;
         Carp::croak 'this is instance method' unless ref $self;
         Carp::croak 'events should be arrayref' unless ref $events eq 'ARRAY';
-        $self->{name} = $appname;
+        $self->{ua} = LWP::UserAgent->new;
+        $self->{ua}->env_proxy;
         Mac::Growl::RegisterNotifications($appname, [ @$events, 'Error' ], $events);
     };
     *Growl::Any::notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         Carp::croak 'this is instance method' unless ref $self;
+        if ($icon) {
+            my $f = mktemp( "/tmp/XXXXX" );
+            $self->{ua}->mirror( $icon, $f );
+            $icon = $f;
+        }
         Mac::Growl::PostNotification($self->{name}, $event, $title, $message, 0, 0, $icon);
+        unlink $icon if -e $icon;
     };
 } elsif (eval { require Desktop::Notify; }) {
     *Growl::Any::register = sub {
         my ($self, $appname, $events) = @_;
         $self->{name} = $appname;
         $self->{instance} = Desktop::Notify->new(("app_name" => $appname));
+        $self->{ua} = LWP::UserAgent->new;
+        $self->{ua}->env_proxy;
     };
     *Growl::Any::notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
-        $self->{instance}->create(body => $message, summary => $title, app_icon => $icon);
+        if ($icon) {
+            my $f = mktemp( "/tmp/XXXXX" );
+            $self->{ua}->mirror( $icon, $f );
+            $icon = $f;
+        }
+        my $notify = $self->{instance}->create(body => $message, summary => $title, app_icon => $icon, timeout => 5000);
+        $notify->show;
+        unlink $icon if -e $icon;
     };
 } elsif (eval { require Net::GrowlClient; }) {
     *Growl::Any::register = sub {
