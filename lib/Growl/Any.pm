@@ -37,6 +37,8 @@ if (eval { require Mac::Growl; }) {
             $self->{ua}->mirror( $icon, $f );
             $icon = $f;
         }
+        Encode::from_to($title, 'MacRoman', 'utf8');
+        Encode::from_to($message, 'MacRoman', 'utf8');
         Mac::Growl::PostNotification($self->{name}, $event, $title, $message, 0, 0, $icon);
         unlink $icon if defined $icon && -e $icon;
     };
