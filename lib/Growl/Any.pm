@@ -24,6 +24,7 @@ if (eval { require Mac::Growl; }) {
         my ($self, $appname, $events) = @_;
         Carp::croak 'this is instance method' unless ref $self;
         Carp::croak 'events should be arrayref' unless ref $events eq 'ARRAY';
+        $self->{name} = $appname;
         $self->{ua} = LWP::UserAgent->new;
         $self->{ua}->env_proxy;
         Mac::Growl::RegisterNotifications($appname, [ @$events, 'Error' ], $events);
@@ -37,7 +38,7 @@ if (eval { require Mac::Growl; }) {
             $icon = $f;
         }
         Mac::Growl::PostNotification($self->{name}, $event, $title, $message, 0, 0, $icon);
-        unlink $icon if -e $icon;
+        unlink $icon if defined $icon && -e $icon;
     };
 } elsif (which('notify-send')) {
     *Growl::Any::register = sub {
@@ -55,7 +56,7 @@ if (eval { require Mac::Growl; }) {
         my $command = shell_quote ('notify-send', '--icon', $icon, $title, $message);
 		#system("$command 2> /dev/null");
         system("$command ");
-        unlink $icon if -e $icon;
+        unlink $icon if defined $icon && -e $icon;
     };
 } elsif (eval { require Desktop::Notify; }) {
     *Growl::Any::register = sub {
@@ -74,7 +75,7 @@ if (eval { require Mac::Growl; }) {
         }
         my $notify = $self->{instance}->create(body => $message, summary => $title, app_icon => $icon, timeout => 5000);
         $notify->show;
-        unlink $icon if -e $icon;
+        unlink $icon if defined $icon && -e $icon;
     };
 } elsif (eval { require Net::GrowlClient; }) {
     *Growl::Any::register = sub {
