@@ -3,6 +3,7 @@ name 'Growl-Any';
 all_from 'lib/Growl/Any.pm';
 
 # requires '';
+requires 'String::ShellQuote';
 
 tests 't/*.t';
 author_tests 'xt';
