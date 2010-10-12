@@ -24,7 +24,7 @@ if (eval { require Mac::Growl; }) {
         my ($self, $appname, $events) = @_;
         Carp::croak 'this is instance method' unless ref $self;
         Carp::croak 'events should be arrayref' unless ref $events eq 'ARRAY';
-        Encode::from_to($appname, 'MacRoman', 'utf8');
+        Encode::encode('utf8', $appname);
         $self->{name} = $appname;
         $self->{ua} = LWP::UserAgent->new;
         $self->{ua}->env_proxy;
@@ -33,10 +33,10 @@ if (eval { require Mac::Growl; }) {
     *Growl::Any::notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         Carp::croak 'this is instance method' unless ref $self;
-        Encode::from_to($event, 'MacRoman', 'utf8');
-        Encode::from_to($title, 'MacRoman', 'utf8');
-        Encode::from_to($message, 'MacRoman', 'utf8');
-        Encode::from_to($icon, 'MacRoman', 'utf8');
+        Encode::encode('utf8', $event);
+        Encode::encode('utf8', $title);
+        Encode::encode('utf8', $message);
+        Encode::encode('utf8', $icon);
         if ($icon) {
             my $f = mktemp( "/tmp/XXXXX" );
             $self->{ua}->mirror( $icon, $f );
