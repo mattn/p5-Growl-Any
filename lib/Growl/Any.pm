@@ -108,6 +108,8 @@ if (eval { require Mac::Growl; }) {
 } elsif (eval { require Net::GrowlClient; }) {
     *Growl::Any::register = sub {
         my ($self, $appname, $events) = @_;
+        Carp::croak 'this is instance method' unless ref $self;
+        Carp::croak 'events should be arrayref' unless ref $events eq 'ARRAY';
         push @$events, 'Error';
         $self->{name} = $appname;
         $self->{instance} = Net::GrowlClient->init(
@@ -120,10 +122,31 @@ if (eval { require Mac::Growl; }) {
     };
     *Growl::Any::notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
+        Carp::croak 'this is instance method' unless ref $self;
         $self->{instance}->notify(
             title => $title,
             message => $message,
             notification => $event);
+    };
+} elsif (eval { require Net::Growl; }) {
+    *Growl::Any::register = sub {
+        my ($self, $appname, $events) = @_;
+        push @$events, 'Error';
+        $self->{name} = $appname;
+        Net::Growl::register(
+            host => 'localhost',
+            application => $appname);
+    };
+    *Growl::Any::notify = sub {
+        my ($self, $event, $title, $message, $icon) = @_;
+        $self->{instance}->notify(
+            title => $title,
+            message => $message,
+            notification => $event);
+        Mac::Growl::notify(
+             application => $self->{name},
+             title => $title,
+             description => $message);
     };
 # TODO: MSAgent does not work correctly.
 #} elsif (eval { require Win32::OLE; require Win32::MSAgent; }) {
