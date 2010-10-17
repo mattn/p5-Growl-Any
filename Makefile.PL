@@ -5,6 +5,7 @@ all_from 'lib/Growl/Any.pm';
 # requires '';
 requires 'String::ShellQuote';
 requires 'Net::Growl';
+requires 'File::Which';
 
 tests 't/*.t';
 author_tests 'xt';
