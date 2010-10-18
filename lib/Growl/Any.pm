@@ -8,7 +8,7 @@ use LWP::UserAgent;
 use File::Temp qw/ :mktemp /;
 use File::Which qw/ which /;
 use String::ShellQuote qw/ shell_quote /;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new {
     my $class = shift;
@@ -177,7 +177,7 @@ __END__
 
 =head1 NAME
 
-Growl::Any -
+Growl::Any - Common interface to Growl.
 
 =head1 SYNOPSIS
 
@@ -189,6 +189,7 @@ Growl::Any -
 =head1 DESCRIPTION
 
 Growl::Any is perl module that can provide any growl application.
+This can notify to desktop application working in local system.
 
 =head1 AUTHOR
 
@@ -198,7 +199,7 @@ tokuhirom
 
 =head1 SEE ALSO
 
-L<Mac::Growl>, L<Desktop::Notify>, L<Net::GrowlClient>, L<Win32::MSAgent>
+L<Mac::Growl>, L<Desktop::Notify>, L<Net::GrowlClient>, L<Net::Growl>
 
 =head1 LICENSE
 
