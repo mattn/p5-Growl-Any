@@ -1,6 +1,9 @@
 Revision history for Perl extension Growl::Any
 
-0.01    Mon Oct 18 10:36:35 2010
+0.03    Tue Oct 19 14:00:51 2010
+        - add dependency for LWP::UserAgent
+
+0.02    Mon Oct 18 10:36:35 2010
         - add dependency for File::Where
 
 0.01    Thu Mar 19 15:23:57 2009
