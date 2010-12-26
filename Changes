@@ -1,5 +1,8 @@
 Revision history for Perl extension Growl::Any
 
+0.04    Mon Dec 27 00:58:00 2010
+        - add Cocoa::Growl
+
 0.03    Tue Oct 19 14:00:51 2010
         - add dependency for LWP::UserAgent
 

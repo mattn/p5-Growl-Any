@@ -8,7 +8,7 @@ use LWP::UserAgent;
 use File::Temp qw/ :mktemp /;
 use File::Which qw/ which /;
 use String::ShellQuote qw/ shell_quote /;
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub new {
     my $class = shift;
@@ -44,6 +44,23 @@ if (eval { require Mac::Growl; }) {
         }
         Mac::Growl::PostNotification($self->{name}, $event, $title, $message, 0, 0, $icon);
         unlink $icon if defined $icon && -e $icon;
+    };
+} elsif (eval { require Cocoa::Growl; }) {
+    *Growl::Any::register = sub {
+        my ($self, $appname, $events) = @_;
+        Cocoa::Growl::growl_register(
+            app           => $appname,
+            notifications => $events,
+        );
+    };
+    *Growl::Any::notify = sub {
+        my ($self, $event, $title, $message, $icon) = @_;
+        Cocoa::Growl::growl_notify(
+            name         => $event,
+            title        => $title,
+            description  => $message,
+            icon         => $icon,
+        );
     };
 } elsif (which('notify-send')) {
     *Growl::Any::register = sub {
