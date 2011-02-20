@@ -34,7 +34,7 @@ __END__
 
 =head1 NAME
 
-Growl::Any - Common interface to Growl
+Growl::Any::NetGrowlClient - Backend to Net::GrowlClient
 
 =head1 SYNOPSIS
 
@@ -42,20 +42,17 @@ Growl::Any - Common interface to Growl
 
 =head1 DESCRIPTION
 
-Growl::Any is perl module that can provide any growl application.
-This can notify to desktop application working in local system.
+This is a Growl::Any backend to Net::GrowlClient.
 
 =head1 AUTHOR
 
 Yasuhiro Matsumoto E<lt>mattn.jp@gmail.comE<gt>
 
-tokuhirom
-
 =head1 SEE ALSO
 
 L<Growl::Any>
 
-L<notify-send(1)>
+L<Net::GrowlClient>
 
 =head1 LICENSE
 

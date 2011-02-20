@@ -44,20 +44,17 @@ Growl::Any::GrowlGNTP - Backend to Growl::GNTP
 
 =head1 DESCRIPTION
 
-Growl::Any is perl module that can provide any growl application.
-This can notify to desktop application working in local system.
+This is a Growl::Any backend to Growl::GNTP.
 
 =head1 AUTHOR
 
 Yasuhiro Matsumoto E<lt>mattn.jp@gmail.comE<gt>
 
-tokuhirom
-
 =head1 SEE ALSO
 
 L<Growl::Any>
 
-L<notify-send(1)>
+L<Growl::GNTP>
 
 =head1 LICENSE
 

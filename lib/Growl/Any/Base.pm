@@ -90,8 +90,7 @@ Growl::Any::Base - The base class for Growl::Any implementations
 
 =head1 DESCRIPTION
 
-Growl::Any is perl module that can provide any growl application.
-This can notify to desktop application working in local system.
+Growl::Any::Base is the base class for Growl::Any backends.
 
 =head1 AUTHOR
 
@@ -102,8 +101,6 @@ tokuhirom
 =head1 SEE ALSO
 
 L<Growl::Any>
-
-L<notify-send(1)>
 
 =head1 LICENSE
 
