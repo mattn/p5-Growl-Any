@@ -9,3 +9,6 @@ Yasuhiro Matsumoto
 mattn.jp@gmail.com
 Growl::Any
 tokuhirom
+backend
+DesktopNotify
+
