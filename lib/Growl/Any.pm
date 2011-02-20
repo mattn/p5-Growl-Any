@@ -34,12 +34,15 @@ if(!$backend) {
 
     foreach my $b(@backends) {
         my $file = "Growl/Any/$b.pm";
+        print STDERR "try to load $file ... " if _DEBUG;
         if(eval { require $file }) {
             $backend = $file;
+            print STDERR "ok.\n" if _DEBUG;
             last;
         }
-        print STDERR "try to load $file ... ", ($@ ? "not " : ""), "ok.\n"
-            if _DEBUG;
+        else {
+            print STDERR "not ok.\n" if _DEBUG;
+        }
     }
 }
 

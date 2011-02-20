@@ -7,9 +7,10 @@ use Growl::Any;
 
 my $g = Growl::Any->new(
     appname => 'growl-any',
-    events  => ['foo'],
+    events  => ['foo', 'bar'],
 );
 
-$g->notify('foo', 'title', 'message');
+$g->notify('foo', 'title1', 'message1');
+$g->notify('bar', 'title2', 'message2');
 
 pass;
