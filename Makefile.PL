@@ -2,7 +2,6 @@ use inc::Module::Install;
 name 'Growl-Any';
 all_from 'lib/Growl/Any.pm';
 
-requires 'String::ShellQuote';
 requires 'File::Which';
 requires 'LWP::UserAgent';
 
