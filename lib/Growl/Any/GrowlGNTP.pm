@@ -2,7 +2,7 @@ package Growl::Any::GrowlGNTP;
 
 use strict;
 use warnings;
-use parent qw(Growl::Any);
+use parent qw(Growl::Any::Base);
 
 use Carp        ();
 use Growl::GNTP ();
