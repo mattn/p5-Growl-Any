@@ -3,10 +3,8 @@ use strict;
 use warnings;
 use parent qw(Growl::Any::Base);
 
-use Carp               ();
-use File::Which        ();
-use File::Spec         ();
-use String::ShellQuote ();
+use Carp        ();
+use File::Which ();
 
 our $COMMAND = File::Which::which('notify-send')
     || Carp::croak("Command not found: notify-send");
@@ -18,12 +16,12 @@ sub notify {
     if(defined $icon) {
         push @opts, '--icon', $self->icon_file($icon);
     }
-    my $command = String::ShellQuote::shell_quote(
-        $COMMAND,
-        $self->encode_list($title, $message));
 
-    my $devnull = File::Spec->devnull;
-    system("$command 2>$devnull");
+    system(
+        $COMMAND,
+        $self->encode_list($title, $message),
+        @opts,
+    );
 }
 
 1;

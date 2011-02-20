@@ -51,7 +51,7 @@ sub encode_list {
 sub _tmpfile { # returns a filehandle with filename() method
     my($self) = @_;
     require File::Temp;
-    return File::Temp->new( SUFFIX => '.ico' );
+    return File::Temp->new();
 }
 
 sub _ua {
@@ -70,7 +70,7 @@ sub icon_file {
     my($self, $icon) = @_;
     unless(-e $icon) { # seems URI
         my $tmpfile = $self->_tmpfile();
-        $self->{ua}->mirror( $icon, $tmpfile );
+        $self->_ua->mirror( $icon, $tmpfile );
         return  $tmpfile;
     }
     return $icon;
