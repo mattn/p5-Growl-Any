@@ -8,8 +8,7 @@ use Desktop::Notify ();
 
 sub register {
     my ($self, $appname, $events) = @_;
-
-    $self->set_appname($appname);
+    $self->SUPER::register($appname, $events);
     $self->{instance} = Desktop::Notify->new(
         "app_name" => $self->appname,
     );
@@ -17,15 +16,10 @@ sub register {
 
 sub notify {
     my ($self, $event, $title, $message, $icon) = @_;
-    my @opts;
-    if (defined $icon) {
-        push @opts, 'app_icon' => $self->icon_file($icon);
-    }
     my $notify = $self->{instance}->create(
         body     => $self->encode($message),
         summary  => $self->encode($title),
         timeout  => 5000,
-        @opts,
     );
     $notify->show();
 }
