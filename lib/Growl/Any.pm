@@ -12,15 +12,16 @@ our $VERSION = '0.04';
 
 sub new {
     my $class = shift;
-    bless({ instance => undef, name => undef }, $class);
+    my $self  = bless {}, $class;
+    $self->regiter(@_) if @_;
+    return $self;
 }
 
-sub register {}
-sub notify {}
+sub register;
+sub notify;
 
-no warnings 'redefine';
 if (eval { require Mac::Growl; }) {
-    *Growl::Any::register = sub {
+    *register = sub {
         my ($self, $appname, $events) = @_;
         Carp::croak 'this is instance method' unless ref $self;
         Carp::croak 'events should be arrayref' unless ref $events eq 'ARRAY';
@@ -30,7 +31,7 @@ if (eval { require Mac::Growl; }) {
         $self->{ua}->env_proxy;
         Mac::Growl::RegisterNotifications($appname, [ @$events, 'Error' ], $events);
     };
-    *Growl::Any::notify = sub {
+    *notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         Carp::croak 'this is instance method' unless ref $self;
         Encode::encode('utf8', $event);
@@ -46,14 +47,14 @@ if (eval { require Mac::Growl; }) {
         unlink $icon if defined $icon && -e $icon;
     };
 } elsif (eval { require Cocoa::Growl; }) {
-    *Growl::Any::register = sub {
+    *register = sub {
         my ($self, $appname, $events) = @_;
         Cocoa::Growl::growl_register(
             app           => $appname,
             notifications => $events,
         );
     };
-    *Growl::Any::notify = sub {
+    *notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         Cocoa::Growl::growl_notify(
             name         => $event,
@@ -63,12 +64,12 @@ if (eval { require Mac::Growl; }) {
         );
     };
 } elsif (which('notify-send')) {
-    *Growl::Any::register = sub {
+    *register = sub {
         my ($self, $appname, $events) = @_;
         $self->{ua} = LWP::UserAgent->new;
         $self->{ua}->env_proxy;
     };
-    *Growl::Any::notify = sub {
+    *notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         if ($icon) {
             my $f = mktemp( "/tmp/XXXXX" );
@@ -80,14 +81,14 @@ if (eval { require Mac::Growl; }) {
         unlink $icon if defined $icon && -e $icon;
     };
 } elsif (eval { require Desktop::Notify; }) {
-    *Growl::Any::register = sub {
+    *register = sub {
         my ($self, $appname, $events) = @_;
         $self->{name} = encode_utf8($appname);
         $self->{instance} = Desktop::Notify->new(("app_name" => encode_utf8($appname)));
         $self->{ua} = LWP::UserAgent->new;
         $self->{ua}->env_proxy;
     };
-    *Growl::Any::notify = sub {
+    *notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         if ($icon) {
             my $f = mktemp( "/tmp/XXXXX" );
@@ -103,7 +104,7 @@ if (eval { require Mac::Growl; }) {
         unlink $icon if defined $icon && -e $icon;
     };
 } elsif (eval { require Growl::GNTP; }) {
-    *Growl::Any::register = sub {
+    *register = sub {
         my ($self, $appname, $events) = @_;
         push @$events, 'Error';
         $self->{name} = encode_utf8($appname);
@@ -114,7 +115,7 @@ if (eval { require Mac::Growl; }) {
         push @e, { Name => encode_utf8($_) } for @$events;
         $self->{instance}->register(\@e);
     };
-    *Growl::Any::notify = sub {
+    *notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         $self->{instance}->notify(
             Title => encode_utf8($title),
@@ -123,7 +124,7 @@ if (eval { require Mac::Growl; }) {
             Icon => encode_utf8($icon));
     };
 } elsif (eval { require Net::GrowlClient; }) {
-    *Growl::Any::register = sub {
+    *register = sub {
         my ($self, $appname, $events) = @_;
         Carp::croak 'this is instance method' unless ref $self;
         Carp::croak 'events should be arrayref' unless ref $events eq 'ARRAY';
@@ -137,7 +138,7 @@ if (eval { require Mac::Growl; }) {
             CLIENT_NOTIFICATION_LIST => $events
         );
     };
-    *Growl::Any::notify = sub {
+    *notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         Carp::croak 'this is instance method' unless ref $self;
         $self->{instance}->notify(
@@ -146,7 +147,7 @@ if (eval { require Mac::Growl; }) {
             notification => $event);
     };
 } elsif (eval { require Net::Growl; }) {
-    *Growl::Any::register = sub {
+    *register = sub {
         my ($self, $appname, $events) = @_;
         push @$events, 'Error';
         $self->{name} = $appname;
@@ -154,7 +155,7 @@ if (eval { require Mac::Growl; }) {
             host => 'localhost',
             application => $appname);
     };
-    *Growl::Any::notify = sub {
+    *notify = sub {
         my ($self, $event, $title, $message, $icon) = @_;
         $self->{instance}->notify(
             title => $title,
@@ -171,7 +172,7 @@ if (eval { require Mac::Growl; }) {
 #        my ($self, $appname, $events) = @_;
 #        my $character = 'Merlin';
 #        my $agent = Win32::MSAgent->new($character);
-#        $agent->Language2LanguageID("English (United States)"); 
+#        $agent->Language2LanguageID("English (United States)");
 #        $self->{instance} = $agent->Characters($character);
 #        $self->{instance}->SoundEffectsOn(1);
 #        $self->{instance}->Show();
