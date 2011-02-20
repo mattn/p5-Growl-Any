@@ -68,8 +68,14 @@ Growl::Any - Common interface to Growl
 
 =head1 DESCRIPTION
 
-Growl::Any is perl module that can provide any growl application.
-This can notify to desktop application working in local system.
+Growl::Any is a Perl module that provide growls using growl modules.
+This can notify to desktop applications working in the local system.
+
+=head1 INTERFACE
+
+=head2 C<< Growl::Any->new(appname => $appname, events => $events, ...) >>
+
+=head2 C<< $growl->notify($event, $title, $message, $path_to_icon_file) >>
 
 =head1 AUTHOR
 
