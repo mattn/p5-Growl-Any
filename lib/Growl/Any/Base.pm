@@ -6,14 +6,17 @@ use Carp       ();
 use Encode     ();
 use File::Temp ();
 
+sub encoding { 'UTF-8' } # overridable if needed
+
 sub new {
     my $class = shift;
     my %args  = ( @_ == 1 ? %{$_[0]} : @_);
 
     my $self  = bless \%args, $class;
 
-    $self->{encoding} = Encode::find_encoding( $args{encoding} || 'UTF-8' )
-        || Carp::croak("Unknown encoding '$args{encoding}'");
+    my $e = $args{encoding} || $class->encoding;
+    $self->{encoding} = Encode::find_encoding( $e )
+        || Carp::croak("Unknown encoding '$e'");
 
     $self->register($args{appname}, $args{events})
         if $args{appname} or $args{events};
