@@ -1,5 +1,6 @@
 package Growl::Any;
 
+use 5.008_001;
 use strict;
 use warnings;
 use constant _DEBUG => $ENV{GROWL_ANY_DEBUG} ? 1 : 0;
