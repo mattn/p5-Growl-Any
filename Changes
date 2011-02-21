@@ -1,5 +1,9 @@
 Revision history for Perl extension Growl::Any
 
+0.05 2011-02-21 13:00:39
+        - Split into submodules for maintaining (gfx)
+        - Add Null backend for the last fallback (gfx)
+
 0.04    Mon Dec 27 00:58:00 2010
         - add Cocoa::Growl
 
