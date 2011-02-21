@@ -1,4 +1,4 @@
-package Growl::Any::NotifySend;
+package Growl::Any::GrowlNotifySend;
 use strict;
 use warnings;
 use parent qw(Growl::Any::Base);
@@ -26,11 +26,11 @@ __END__
 
 =head1 NAME
 
-Growl::Any::NotifySend - Backend to Growl::NotifySend
+Growl::Any::GrowlNotifySend - Backend to Growl::NotifySend
 
 =head1 SYNOPSIS
 
-  use Growl::Any::NotifySend;
+  use Growl::Any::GrowlNotifySend;
   use Growl::Any;
 
 =head1 DESCRIPTION

@@ -2,7 +2,7 @@ package Growl::Any::NetGrowl;
 
 use strict;
 use warnings;
-use parent qw(Net::Growl::Base);
+use parent qw(Growl::Any::Base);
 
 use Carp       ();
 use Net::Growl ();

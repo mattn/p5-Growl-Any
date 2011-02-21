@@ -23,7 +23,7 @@ if(!$backend) {
     my @backends = qw(
         MacGrowl
         CocoaGrowl
-        NotifySend
+        GrowlNotifySend
         DesktopNotify
         GrowlGNTP
         NetGrowlClient
