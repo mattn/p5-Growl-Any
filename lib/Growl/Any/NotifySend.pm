@@ -3,23 +3,20 @@ use strict;
 use warnings;
 use parent qw(Growl::Any::Base);
 
-use Carp        ();
-use File::Which ();
-
-our $COMMAND = File::Which::which('notify-send')
-    || Carp::croak("Command not found: notify-send");
+use Carp              ();
+use Growl::NotifySend ();
 
 sub notify {
     my ($self, $event, $title, $message, $icon) = @_;
 
     my @opts;
     if(defined $icon) {
-        push @opts, '--icon', $self->icon_file($icon);
+        push @opts, 'icon', $self->icon_file($icon);
     }
 
-    system(
-        $COMMAND,
-        $self->encode_list($title, $message),
+    Growl::NotifySend->show(
+        summary => $title,
+        body    => $message,
         @opts,
     );
 }
@@ -29,7 +26,7 @@ __END__
 
 =head1 NAME
 
-Growl::Any::NotifySend - Backend to notify-send(1)
+Growl::Any::NotifySend - Backend to Growl::NotifySend
 
 =head1 SYNOPSIS
 
@@ -38,7 +35,7 @@ Growl::Any::NotifySend - Backend to notify-send(1)
 
 =head1 DESCRIPTION
 
-This is a Growl::Any backend to C<notify-send(1)>.
+This is a Growl::Any backend to Growl::NotifySend.
 
 =head1 AUTHOR
 
@@ -48,7 +45,7 @@ Yasuhiro Matsumoto E<lt>mattn.jp@gmail.comE<gt>
 
 L<Growl::Any>
 
-L<notify-send(1)>
+L<Growl::NotifySend>
 
 =head1 LICENSE
 
