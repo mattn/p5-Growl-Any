@@ -29,6 +29,7 @@ if(!$backend) {
         NetGrowl
         Win32MSAgent
 
+        Null
         IOHandle
     );
 
@@ -75,7 +76,18 @@ This can notify to desktop applications working in the local system.
 
 =head2 C<< Growl::Any->new(appname => $appname, events => $events, ...) >>
 
+Creates a Growl::Any client with I<$appname> and I<$events>.
+
+I<$appname> must be a text string, and I<$events> must be an ARRAY reference
+consisting of text strings.
+
 =head2 C<< $growl->notify($event, $title, $message, $path_to_icon_file) >>
+
+Show a notification with given arguments.
+
+=head2 C<< Growl::Any->backend >>
+
+Returns the Growl::Any backend.
 
 =head1 AUTHOR
 
