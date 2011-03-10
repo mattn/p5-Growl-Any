@@ -1,5 +1,8 @@
 Revision history for Perl extension Growl::Any
 
+0.06 2011-03-10 12:00:00
+        - Fixed broken MANIFEST.
+
 0.06 2011-03-08 02:22:02
         - Avoid test with "A password is required" in Net::Growl.
 

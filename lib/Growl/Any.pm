@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use constant _DEBUG => $ENV{GROWL_ANY_DEBUG} ? 1 : 0;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 my $backend;
 
