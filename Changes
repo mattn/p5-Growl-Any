@@ -1,5 +1,8 @@
 Revision history for Perl extension Growl::Any
 
+0.06 2011-03-08 02:22:02
+        - Avoid test with "A password is required" in Net::Growl.
+
 0.05 2011-02-21 13:00:39
         - Split into submodules for maintaining (gfx)
         - Add Null backend for the last fallback (gfx)
