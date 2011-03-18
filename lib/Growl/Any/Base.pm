@@ -2,9 +2,9 @@ package Growl::Any::Base;
 use strict;
 use warnings;
 
-use Carp       ();
-use Encode     ();
-use File::Temp ();
+use Carp   ();
+use Encode ();
+use POSIX;
 
 sub encoding { 'UTF-8' } # overridable if needed
 
@@ -74,9 +74,10 @@ sub encode_list_from {
 }
 
 sub _tmpfile { # returns a filehandle with filename() method
-    my($self) = @_;
+    my($self, $suffix) = @_;
     require File::Temp;
-    return File::Temp->new();
+    my (undef, $filename) = File::Temp::tempfile( SUFFIX => $suffix, CLEANUP => 1, OPEN => 0 );
+    return $filename;
 }
 
 sub _ua {
@@ -87,6 +88,7 @@ sub _ua {
         my $ua = LWP::UserAgent->new( agent =>
             sprintf 'Growl::Any (LWP/%s)', LWP->VERSION );
         $ua->env_proxy();
+        $ua->timeout(10);
         return $ua;
     };
 }
@@ -94,9 +96,12 @@ sub _ua {
 sub icon_file {
     my($self, $icon) = @_;
     unless(-e $icon) { # seems URI
-        my $tmpfile = $self->_tmpfile();
-        $self->_ua->mirror( $icon, $tmpfile );
-        return  $tmpfile;
+        my $ext = $icon;
+        $ext =~ s/#.*$//;
+        $ext = $ext =~ /.*(\.[a-zA-Z0-9]+)$/ ? $1 : '';
+        my $tmpfile = $self->_tmpfile( $ext );
+        my $res = $self->_ua->mirror( $icon, $tmpfile );
+        return $tmpfile if $res->is_success;
     }
     return $icon;
 }

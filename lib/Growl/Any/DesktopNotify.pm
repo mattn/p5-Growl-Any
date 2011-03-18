@@ -16,10 +16,12 @@ sub register {
 
 sub notify {
     my ($self, $event, $title, $message, $icon) = @_;
+    $icon = $self->icon_file($icon) if defined $icon;
     my $notify = $self->{instance}->create(
         body     => $self->encode($message),
         summary  => $self->encode($title),
         timeout  => 5000,
+        app_icon => $icon,
     );
     $notify->show();
 }
