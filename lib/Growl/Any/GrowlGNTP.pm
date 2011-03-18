@@ -22,12 +22,13 @@ sub register {
 }
 
 sub notify {
-    my ($self, $event, $title, $message, $icon) = @_;
+    my ($self, $event, $title, $message, $icon, $link) = @_;
     $self->{instance}->notify(
-        Title   => $self->encode($title),
-        Message => $self->encode($message),
-        Event   => $self->encode($event),
-        Icon    => $self->encode($icon),
+        Title          => $self->encode($title),
+        Message        => $self->encode($message),
+        Event          => $self->encode($event),
+        Icon           => $self->encode($icon),
+        CallbackTarget => $self->encode($link),
     );
 }
 
