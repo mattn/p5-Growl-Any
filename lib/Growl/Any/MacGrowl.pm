@@ -10,7 +10,7 @@ use Mac::Growl ();
 sub register {
     my ($self, $appname, $events) = @_;
     $self->SUPER::register($appname, $events);
-    my @e = $self->encode_list(@{$events});
+    my @e = $self->encode_list_from('MacRoman', @{$events});
     Mac::Growl::RegisterNotifications($self->appname, [ @e, 'Error'], \@e);
 }
 
@@ -20,7 +20,7 @@ sub notify {
         $icon = $self->icon_file($icon);
     }
     Mac::Growl::PostNotification($self->appname,
-        $self->encode_list( $event, $title, $message ), 0, 0, $icon);
+        $self->encode_list_from( 'MacRoman', $event, $title, $message ), 0, 0, $icon);
 }
 
 1;
