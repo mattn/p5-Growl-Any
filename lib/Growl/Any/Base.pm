@@ -37,6 +37,12 @@ sub register {
     $self->{appname} = $self->encode($appname);
 }
 
+# parameters
+#  event
+#  title
+#  message
+#  icon (optional)
+#  link (optional)
 sub notify; # abstract method
 
 sub encode {
@@ -46,9 +52,25 @@ sub encode {
         : $text_str;
 }
 
+sub encode_from {
+    my($self, $from, $text_str) = @_;
+    if (defined($text_str)) {
+        Encode::from_to($text_str, $from, $self->{encoding}->name);
+    }
+    $text_str;
+}
+
 sub encode_list {
     my $self = shift;
     return map { defined($_) ? $self->{encoding}->encode($_) : $_ } @_;
+}
+
+sub encode_list_from {
+    my ($self, $from) = @_;
+    return map {
+        Encode::from_to($_, $from, $self->{encoding}->name) if defined($_);
+        $_
+    } @_;
 }
 
 sub _tmpfile { # returns a filehandle with filename() method
