@@ -4,7 +4,6 @@ use warnings;
 
 use Carp   ();
 use Encode ();
-use POSIX;
 
 sub encoding { 'UTF-8' } # overridable if needed
 
