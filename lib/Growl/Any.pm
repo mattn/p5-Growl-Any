@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use constant _DEBUG => $ENV{GROWL_ANY_DEBUG} ? 1 : 0;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 my $backend;
 
@@ -33,6 +33,9 @@ if(!$backend) {
         Null
         IOHandle
     );
+    if (my $default_backend = $ENV{GROWL_ANY_DEFAULT_BACKEND}) {
+        unshift @backends, $default_backend;
+    }
 
     foreach my $b(@backends) {
         my $file = "Growl/Any/$b.pm";

@@ -6,6 +6,7 @@ requires 'LWP::UserAgent';
 
 test_requires 'Test::More';
 test_requires 'parent';
+test_requires 'IO::Handle';
 
 tests 't/*.t';
 author_tests 'xt';

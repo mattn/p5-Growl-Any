@@ -1,5 +1,11 @@
 Revision history for Perl extension Growl::Any
 
+0.08 2011-04-21 18:00:00
+        - Use environment variable $GROWL_ANY_DEFAULT_BACKEND to specify interface.
+
+0.07 2011-04-20 12:00:00
+        - Die when failed to post.
+
 0.06 2011-03-10 12:00:00
         - Fixed broken MANIFEST.
 

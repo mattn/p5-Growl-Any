@@ -9,5 +9,5 @@ my $g = Growl::Any->new(
 );
 $g->notify('sleep', 'mattn as TKSK',
     'ZIGOROu の説教まじはんぱねえ',
-    'http://st-hatena.com/users/to/tokuhirom/profile.gif');
+    'http://www.hatena.ne.jp/users/to/tokuhirom/profile.gif');
 
