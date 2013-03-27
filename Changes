@@ -1,5 +1,7 @@
 Revision history for Perl extension Growl::Any
 
+{{$NEXT}}
+
 0.09 2011-04-21 18:00:00
         - Use environment variable $GROWL_ANY_DEFAULT_BACKEND to specify interface.
 

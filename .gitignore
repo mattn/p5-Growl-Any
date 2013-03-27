@@ -6,3 +6,9 @@ inc
 pm_to_blib
 MANIFEST
 Makefile.old
+/Growl-Any-*
+/.build
+/_build_params
+/Build
+!Build/
+!META.json
